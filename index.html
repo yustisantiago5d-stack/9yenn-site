@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://9yenn.com">
+  <meta property="og:title" content="GEYENN's site">
+  <meta property="og:description" content="Visita la página de 9yenn en el espacio.">
+  <meta property="og:image" content="https://9yenn.com/favicon.png">
+  <meta property="og:image:alt" content="Imagen de 9yenn">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GEYENN's site">
+  <meta name="twitter:description" content="Visita la página de 9yenn en el espacio.">
+  <meta name="twitter:image" content="https://9yenn.com/favicon.png">
+  <title>GEYENN's site</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Courier New", Courier, monospace;
+      background: #008080;
+      color: #ddd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      min-height: 100svh;
+      flex-direction: column;
+      overflow: hidden;
+      background: #008080;
+    }
+
+    .browser-window {
+      display: flex;
+      min-height: 0;
+      flex: 1;
+      flex-direction: column;
+      margin: 6px 6px 4px;
+      padding: 2px;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
+    }
+
+    .title-bar {
+      display: flex;
+      min-height: 23px;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 4px;
+      color: #fff;
+      background: linear-gradient(90deg, #000080, #1084d0);
+      font: bold 12px Arial, sans-serif;
+    }
+
+    .title-icon {
+      display: grid;
+      width: 16px;
+      height: 16px;
+      place-items: center;
+      color: #000080;
+      background: #fff;
+      border: 1px solid #808080;
+      font-size: 11px;
+    }
+
+    .window-title {
+      flex: 1;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .window-controls button {
+      display: grid;
+      width: 16px;
+      height: 14px;
+      place-items: center;
+      color: #111;
+      background: #c0c0c0;
+      border: 1px solid;
+      border-color: #fff #404040 #404040 #fff;
+      font: bold 11px Arial, sans-serif;
+      line-height: 1;
+    }
+
+    .menu-bar {
+      display: flex;
+      min-height: 24px;
+      align-items: center;
+      gap: 4px;
+      padding: 1px 5px;
+      color: #111;
+      background: #c0c0c0;
+      font: 12px Arial, sans-serif;
+    }
+
+    .menu-item {
+      position: relative;
+    }
+
+    .menu-button {
+      padding: 3px 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      font: inherit;
+    }
+
+    .menu-button:hover,
+    .menu-button[aria-expanded="true"] {
+      border-color: #808080;
+    }
+
+    .toolbar {
+      display: flex;
+      min-height: 44px;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 5px;
+      color: #111;
+      background: #c0c0c0;
+      border-top: 1px solid #fff;
+      border-bottom: 1px solid #808080;
+      font: 11px Arial, sans-serif;
+    }
+
+    .tool-button {
+      display: grid;
+      min-width: 42px;
+      height: 36px;
+      align-content: center;
+      justify-items: center;
+      gap: 1px;
+      padding: 1px 3px;
+      background: transparent;
+      border: 1px solid transparent;
+      font: inherit;
+    }
+
+    .tool-button:hover:not(:disabled) {
+      background: #d6d6d6;
+      border-color: #fff #808080 #808080 #fff;
+    }
+
+    .tool-button:disabled {
+      color: #777;
+      cursor: default;
+    }
+
+    .tool-icon {
+      font: 17px Arial, sans-serif;
+    }
+
+    .toolbar-separator {
+      width: 2px;
+      height: 31px;
+      margin: 0 4px;
+      border-left: 1px solid #808080;
+      border-right: 1px solid #fff;
+    }
+
+    .address-bar {
+      display: flex;
+      min-height: 25px;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 6px;
+      color: #111;
+      background: #c0c0c0;
+      font: 12px Arial, sans-serif;
+    }
+
+    .address-label {
+      color: #222;
+    }
+
+    .address-value {
+      min-width: 0;
+      flex: 1;
+      padding: 3px 5px;
+      background: #fff;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+      color: #111;
+    }
+
+    .address-value input {
+      width: 100%;
+      padding: 0;
+      border: 0;
+      outline: 0;
+      color: inherit;
+      background: transparent;
+      font: inherit;
+    }
+
+    .dropdown {
+      position: absolute;
+      z-index: 5;
+      top: 100%;
+      left: 0;
+      display: none;
+      min-width: 180px;
+      padding: 3px;
+      color: #111;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
+      font: 12px Arial, sans-serif;
+    }
+
+    .dropdown.is-open {
+      display: block;
+    }
+
+    .dropdown button {
+      display: block;
+      width: 100%;
+      padding: 5px 18px;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .dropdown button:hover {
+      color: #fff;
+      background: #000080;
+    }
+
+    .menu-divider {
+      height: 1px;
+      margin: 3px 2px;
+      background: #808080;
+      border-bottom: 1px solid #fff;
+    }
+
+    .browser-content {
+      position: relative;
+      min-height: 0;
+      flex: 1;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .status-line {
+      min-height: 18px;
+      padding: 2px 5px;
+      color: #111;
+      background: #c0c0c0;
+      border-top: 1px solid #808080;
+      font: 11px Arial, sans-serif;
+    }
+
+    .browser-content::before {
+      position: absolute;
+      z-index: 0;
+      inset: -35%;
+      background:
+        radial-gradient(ellipse at 30% 35%, rgb(38 24 96 / 38%), transparent 42%),
+        radial-gradient(ellipse at 70% 65%, rgb(9 59 89 / 30%), transparent 45%),
+        radial-gradient(ellipse at 60% 20%, rgb(85 22 70 / 18%), transparent 35%);
+      content: "";
+      animation: nebula-drift 32s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes nebula-drift {
+      from { transform: translate3d(-2%, -1%, 0) scale(1); }
+      to { transform: translate3d(2%, 1%, 0) scale(1.08); }
+    }
+
+    #starfield {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      width: 100%;
+      min-height: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .brand {
+      position: relative;
+      padding-top: 4.5em;
+      font-size: clamp(0.42rem, 1.15vw, 0.9rem);
+      text-align: center;
+    }
+
+    pre {
+      margin: 0;
+      color: #d7d7d7;
+      font-size: inherit;
+      font-weight: 700;
+      line-height: 1.5;
+      text-shadow: 0 0 5px rgb(255 255 255 / 28%);
+      white-space: pre;
+    }
+
+    .brand > pre,
+    .brand-name {
+      color: transparent;
+      background: linear-gradient(90deg, #ff3b3b, #ffb52e, #f8ff45, #45ff83, #43caff, #ab68ff, #ff55c8, #ff3b3b);
+      background-size: 300% 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation: colorful-float 1.25s ease-in-out infinite, rainbow-cycle 3s linear infinite;
+      text-shadow: 0 0 8px rgb(92 207 255 / 55%), 0 0 18px rgb(199 72 255 / 30%);
+    }
+
+    @keyframes colorful-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+
+    @keyframes rainbow-cycle {
+      from { background-position: 0% 50%; }
+      to { background-position: 100% 50%; }
+    }
+
+    .brand-name {
+      margin: 1.5em 0 0;
+      font-family: Arial, sans-serif;
+      font-size: 1em;
+      animation-delay: 0.15s, 0s;
+    }
+
+    .taskbar {
+      display: flex;
+      height: 32px;
+      flex: 0 0 32px;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 5px;
+      color: #111;
+      background: #c0c0c0;
+      border-top: 2px solid #fff;
+      font: 11px Arial, sans-serif;
+    }
+
+    .start-button,
+    .task-button,
+    .task-clock {
+      display: flex;
+      height: 24px;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      font-weight: bold;
+    }
+
+    .start-button {
+      font-size: 12px;
+    }
+
+    .start-menu {
+      position: fixed;
+      z-index: 10;
+      bottom: 32px;
+      left: 5px;
+      display: none;
+      width: 210px;
+      padding: 4px;
+      color: #111;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
+      font: 12px Arial, sans-serif;
+    }
+
+    .start-menu.is-open {
+      display: block;
+    }
+
+    .start-menu button {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+    }
+
+    .start-menu button:hover {
+      color: #fff;
+      background: #000080;
+    }
+
+    .start-menu-icon {
+      width: 18px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .start-logo {
+      color: #087c3e;
+      font-size: 15px;
+    }
+
+    .task-button {
+      min-width: 130px;
+      font-weight: normal;
+    }
+
+    .task-clock {
+      min-width: 56px;
+      justify-content: center;
+      margin-left: auto;
+      border-color: #808080 #fff #fff #808080;
+      font-weight: normal;
+    }
+
+    .browser-window.is-minimized,
+    .browser-window.is-closed {
+      display: none;
+    }
+
+    .browser-window.is-maximized {
+      margin: 0;
+    }
+
+    .browser-window.is-maximized + .taskbar {
+      margin-top: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .browser-content::before {
+        animation: none;
+      }
+
+      body {
+        background: #008080;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .toolbar .tool-button:nth-of-type(n + 5),
+      .toolbar .toolbar-separator:nth-of-type(n + 2) {
+        display: none;
+      }
+
+      .task-button {
+        min-width: 0;
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="browser-window" aria-label="Ventana de Internet Explorer estilo Windows 98">
+    <header class="title-bar">
+      <span class="title-icon" aria-hidden="true">e</span>
+      <span class="window-title">9yenn's site - Microsoft Internet Explorer</span>
+      <span class="window-controls">
+        <button type="button" data-action="minimize" aria-label="Minimizar">_</button>
+        <button type="button" data-action="maximize" aria-label="Maximizar">□</button>
+        <button type="button" data-action="close" aria-label="Cerrar">×</button>
+      </span>
+    </header>
+    <nav class="menu-bar" aria-label="Menú del navegador">
+      <div class="menu-item">
+        <button type="button" class="menu-button" aria-expanded="false">File</button>
+        <div class="dropdown">
+          <button type="button" data-action="home">Home</button>
+          <button type="button" data-action="print">Print...</button>
+          <div class="menu-divider"></div>
+          <button type="button" data-action="close">Close</button>
+        </div>
+      </div>
+      <div class="menu-item">
+        <button type="button" class="menu-button" aria-expanded="false">Edit</button>
+        <div class="dropdown">
+          <button type="button" data-action="select-all">Select all</button>
+          <button type="button" data-action="copy">Copy page address</button>
+        </div>
+      </div>
+      <div class="menu-item">
+        <button type="button" class="menu-button" aria-expanded="false">View</button>
+        <div class="dropdown">
+          <button type="button" data-action="back">Back</button>
+          <button type="button" data-action="forward">Forward</button>
+          <button type="button" data-action="refresh">Refresh</button>
+          <button type="button" data-action="fullscreen">Full screen</button>
+        </div>
+      </div>
+      <div class="menu-item">
+        <button type="button" class="menu-button" aria-expanded="false">Favorites</button>
+        <div class="dropdown">
+          <button type="button" data-action="add-favorite">Add to Favorites</button>
+          <div class="menu-divider"></div>
+          <div class="favorite-list"></div>
+        </div>
+      </div>
+      <div class="menu-item">
+        <button type="button" class="menu-button" aria-expanded="false">Tools</button>
+        <div class="dropdown">
+          <button type="button" data-action="search">Search the web</button>
+          <button type="button" data-action="history">View History</button>
+          <button type="button" data-action="mail">Read mail</button>
+        </div>
+      </div>
+      <div class="menu-item">
+        <button type="button" class="menu-button" aria-expanded="false">Help</button>
+        <div class="dropdown">
+          <button type="button" data-action="about">About this page</button>
+        </div>
+      </div>
+    </nav>
+    <div class="toolbar" aria-label="Barra de herramientas">
+      <button type="button" class="tool-button" data-action="back"><span class="tool-icon">←</span><span>Back</span></button>
+      <button type="button" class="tool-button" data-action="forward"><span class="tool-icon">→</span><span>Forward</span></button>
+      <button type="button" class="tool-button" data-action="stop"><span class="tool-icon">×</span><span>Stop</span></button>
+      <button type="button" class="tool-button" data-action="refresh"><span class="tool-icon">↻</span><span>Refresh</span></button>
+      <button type="button" class="tool-button" data-action="home"><span class="tool-icon">⌂</span><span>Home</span></button>
+      <div class="toolbar-separator"></div>
+      <button type="button" class="tool-button" data-action="search"><span class="tool-icon">⌕</span><span>Search</span></button>
+      <button type="button" class="tool-button" data-action="favorites"><span class="tool-icon">☆</span><span>Favorites</span></button>
+      <button type="button" class="tool-button" data-action="history"><span class="tool-icon">◷</span><span>History</span></button>
+      <button type="button" class="tool-button" data-action="channels"><span class="tool-icon">▤</span><span>Channels</span></button>
+      <div class="toolbar-separator"></div>
+      <button type="button" class="tool-button" data-action="fullscreen"><span class="tool-icon">▣</span><span>Fullscreen</span></button>
+      <button type="button" class="tool-button" data-action="mail"><span class="tool-icon">✉</span><span>Mail</span></button>
+      <button type="button" class="tool-button" data-action="print"><span class="tool-icon">▤</span><span>Print</span></button>
+    </div>
+    <div class="address-bar">
+      <span class="address-label">Address</span>
+      <label class="address-value">🌐 &nbsp;<input id="address-input" aria-label="Dirección" value="https://9yenn.dev/"></label>
+      <span class="address-label">Links</span>
+    </div>
+    <div class="browser-content">
+      <canvas id="starfield" aria-hidden="true"></canvas>
+      <main>
+        <div class="brand">
+          <pre aria-label="GEYENN">  _____   _____   __   __   _____   _   _   _   _
+ / ____| | ____|  \ \ / /  | ____| | \ | | | \ | |
+| |  __  | |__     \ V /   | |__   |  \| | |  \| |
+| | |_ | |  __|     | |    |  __|  | . \ | | . \ |
+| |__| | | |___     | |    | |___  | |\  | | |\  |
+ \_____| |_____|    |_|    |_____| |_| \_| |_| \_|</pre>
+          <p class="brand-name">9yenn</p>
+        </div>
+      </main>
+    </div>
+    <div class="status-line" role="status" aria-live="polite">Done</div>
+  </section>
+  <footer class="taskbar" aria-label="Barra de tareas de Windows 98">
+    <button type="button" class="start-button" data-action="start"><span class="start-logo">▦</span>Start</button>
+    <button type="button" class="task-button" data-action="restore"><span aria-hidden="true">🌐</span>Internet Explorer</button>
+    <div class="task-clock" aria-label="Hora"></div>
+  </footer>
+  <div class="start-menu">
+    <button type="button" data-action="home"><span class="start-menu-icon">🌌</span>9yenn's site</button>
+    <button type="button" data-action="search"><span class="start-menu-icon">⌕</span>Search the web</button>
+    <div class="menu-divider"></div>
+    <button type="button" data-action="close"><span class="start-menu-icon">⏻</span>Shut down</button>
+  </div>
+
+  <script>
+    const canvas = document.querySelector("#starfield");
+    const viewport = document.querySelector(".browser-content");
+    const context = canvas.getContext("2d");
+    const browserWindow = document.querySelector(".browser-window");
+    const addressInput = document.querySelector("#address-input");
+    const statusLine = document.querySelector(".status-line");
+    const startMenu = document.querySelector(".start-menu");
+    const homeAddress = addressInput.value;
+    let stars = [];
+    let shootingStars = [];
+    let frame;
+    let nextShootingStar = 0;
+    let historyEntries = [homeAddress];
+    let historyIndex = 0;
+
+    function setStatus(message) {
+      statusLine.textContent = message;
+    }
+
+    function updateNavigationButtons() {
+      document.querySelectorAll('[data-action="back"]').forEach((button) => {
+        button.disabled = historyIndex <= 0;
+      });
+      document.querySelectorAll('[data-action="forward"]').forEach((button) => {
+        button.disabled = historyIndex >= historyEntries.length - 1;
+      });
+    }
+
+    function navigate(address, addToHistory = true) {
+      addressInput.value = address;
+      if (addToHistory) {
+        historyEntries = historyEntries.slice(0, historyIndex + 1);
+        historyEntries.push(address);
+        historyIndex = historyEntries.length - 1;
+      }
+      updateNavigationButtons();
+      setStatus(`Address selected: ${address}`);
+    }
+
+    function openExternal(address) {
+      const popup = window.open(address, "_blank");
+      if (popup) {
+        popup.opener = null;
+        setStatus(`Opened in a new tab: ${address}`);
+      } else {
+        setStatus("The browser blocked the new tab. Allow pop-ups and try again.");
+      }
+    }
+
+    function openSearch() {
+      const query = window.prompt("What would you like to search for?");
+      if (query === null || !query.trim()) return;
+      openExternal(`https://www.bing.com/search?q=${encodeURIComponent(query.trim())}`);
+    }
+
+    function renderFavorites() {
+      const list = document.querySelector(".favorite-list");
+      list.replaceChildren();
+      let favorites = [];
+      try {
+        favorites = JSON.parse(localStorage.getItem("9yenn-favorites") || "[]");
+      } catch (error) {
+        setStatus("Could not read saved favorites from this browser.");
+      }
+
+      if (!favorites.length) {
+        const empty = document.createElement("button");
+        empty.type = "button";
+        empty.disabled = true;
+        empty.textContent = "No favorites saved";
+        list.append(empty);
+        return;
+      }
+
+      favorites.forEach((favorite) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.dataset.favoriteAddress = favorite.address;
+        item.textContent = favorite.label;
+        list.append(item);
+      });
+    }
+
+    function addFavorite() {
+      try {
+        const favorites = JSON.parse(localStorage.getItem("9yenn-favorites") || "[]");
+        const address = addressInput.value;
+        if (!favorites.some((favorite) => favorite.address === address)) {
+          favorites.push({ address, label: address });
+          localStorage.setItem("9yenn-favorites", JSON.stringify(favorites));
+        }
+        renderFavorites();
+        setStatus("Added to Favorites.");
+      } catch (error) {
+        setStatus("Could not save this favorite in the browser.");
+      }
+    }
+
+    function toggleMenu(menuButton) {
+      const dropdown = menuButton.nextElementSibling;
+      const willOpen = !dropdown.classList.contains("is-open");
+      document.querySelectorAll(".dropdown.is-open").forEach((menu) => {
+        menu.classList.remove("is-open");
+        menu.previousElementSibling.setAttribute("aria-expanded", "false");
+      });
+      if (willOpen) {
+        dropdown.classList.add("is-open");
+        menuButton.setAttribute("aria-expanded", "true");
+      }
+      startMenu.classList.remove("is-open");
+    }
+
+    function performAction(action) {
+      switch (action) {
+        case "home":
+          navigate(homeAddress);
+          shootingStars = [];
+          break;
+        case "back":
+        case "forward": {
+          const direction = action === "back" ? -1 : 1;
+          const nextIndex = historyIndex + direction;
+          if (nextIndex >= 0 && nextIndex < historyEntries.length) {
+            historyIndex = nextIndex;
+            navigate(historyEntries[historyIndex], false);
+          }
+          break;
+        }
+        case "stop":
+          stopAnimation();
+          setStatus("Animation stopped. Select Refresh to resume.");
+          break;
+        case "refresh":
+          resize();
+          shootingStars = [];
+          stopAnimation();
+          draw();
+          setStatus("Page refreshed.");
+          break;
+        case "search":
+          openSearch();
+          break;
+        case "favorites":
+          renderFavorites();
+          document.querySelector(".menu-item:nth-child(4) .menu-button").click();
+          break;
+        case "add-favorite":
+          addFavorite();
+          break;
+        case "history":
+          window.alert(`Recent addresses:\n\n${historyEntries.slice().reverse().join("\n")}`);
+          break;
+        case "channels":
+          window.alert("There are no channels configured.");
+          break;
+        case "fullscreen":
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => setStatus("Could not leave full screen."));
+          } else {
+            document.documentElement.requestFullscreen().catch(() => setStatus("Full screen is unavailable."));
+          }
+          break;
+        case "mail":
+          window.location.href = "mailto:?subject=Hello%20from%209yenn";
+          break;
+        case "print":
+          window.print();
+          break;
+        case "select-all": {
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(document.querySelector(".brand"));
+          selection.removeAllRanges();
+          selection.addRange(range);
+          setStatus("Page text selected.");
+          break;
+        }
+        case "copy":
+          navigator.clipboard.writeText(addressInput.value)
+            .then(() => setStatus("Page address copied."))
+            .catch(() => setStatus("Could not copy the address. Check clipboard permissions."));
+          break;
+        case "about":
+          window.alert("9yenn's site\nA small page with a Windows 98-inspired browser frame.");
+          break;
+        case "minimize":
+          browserWindow.classList.add("is-minimized");
+          setStatus("Window minimized. Select Internet Explorer to restore it.");
+          break;
+        case "maximize":
+          browserWindow.classList.toggle("is-maximized");
+          break;
+        case "close":
+          browserWindow.classList.add("is-closed");
+          startMenu.classList.remove("is-open");
+          break;
+        case "restore":
+          browserWindow.classList.remove("is-minimized", "is-closed");
+          break;
+        case "start":
+          startMenu.classList.toggle("is-open");
+          document.querySelectorAll(".dropdown.is-open").forEach((menu) => {
+            menu.classList.remove("is-open");
+            menu.previousElementSibling.setAttribute("aria-expanded", "false");
+          });
+          break;
+        default:
+          break;
+      }
+    }
+
+    document.addEventListener("click", (event) => {
+      const menuButton = event.target.closest(".menu-button");
+      if (menuButton) {
+        toggleMenu(menuButton);
+        return;
+      }
+
+      const favoriteButton = event.target.closest("[data-favorite-address]");
+      if (favoriteButton) {
+        navigate(favoriteButton.dataset.favoriteAddress);
+      }
+
+      const actionButton = event.target.closest("[data-action]");
+      if (actionButton && !actionButton.disabled) {
+        const action = actionButton.dataset.action;
+        performAction(action);
+        if (action !== "start") {
+          startMenu.classList.remove("is-open");
+        }
+        if (action !== "favorites") {
+          document.querySelectorAll(".dropdown.is-open").forEach((menu) => {
+            menu.classList.remove("is-open");
+            menu.previousElementSibling.setAttribute("aria-expanded", "false");
+          });
+        }
+        return;
+      }
+
+      if (!event.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown.is-open").forEach((menu) => {
+          menu.classList.remove("is-open");
+          menu.previousElementSibling.setAttribute("aria-expanded", "false");
+        });
+      }
+      if (!event.target.closest(".start-menu") && !event.target.closest('[data-action="start"]')) {
+        startMenu.classList.remove("is-open");
+      }
+    });
+
+    addressInput.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      const enteredAddress = addressInput.value.trim();
+      if (!enteredAddress) return;
+      const address = /^[a-z][a-z\d+.-]*:/i.test(enteredAddress)
+        ? enteredAddress
+        : `https://${enteredAddress}`;
+      try {
+        const parsedAddress = new URL(address);
+        if (!["http:", "https:"].includes(parsedAddress.protocol)) {
+          setStatus("Only web addresses starting with http:// or https:// are supported.");
+          return;
+        }
+        navigate(parsedAddress.href);
+        openExternal(parsedAddress.href);
+      } catch (error) {
+        setStatus("Enter a valid web address and press Enter.");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        startMenu.classList.remove("is-open");
+        document.querySelectorAll(".dropdown.is-open").forEach((menu) => {
+          menu.classList.remove("is-open");
+          menu.previousElementSibling.setAttribute("aria-expanded", "false");
+        });
+      }
+    });
+
+    function resize() {
+      const width = viewport.clientWidth;
+      const height = viewport.clientHeight;
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(width * ratio);
+      canvas.height = Math.floor(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+      const count = Math.floor((width * height) / 4500);
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() < 0.08 ? 1.6 : 0.5 + Math.random() * 0.65,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.003 + Math.random() * 0.009,
+        drift: 0.2 + Math.random() * 0.45
+      }));
+    }
+
+    function draw(time = 0) {
+      const width = viewport.clientWidth;
+      const height = viewport.clientHeight;
+      context.clearRect(0, 0, width, height);
+
+      for (const star of stars) {
+        const opacity = 0.3 + (Math.sin(star.phase) + 1) * 0.3;
+        context.beginPath();
+        context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        context.fillStyle = `rgba(230, 235, 255, ${opacity})`;
+        context.shadowBlur = star.radius > 1 ? 8 : 0;
+        context.shadowColor = "#fff";
+        context.fill();
+        star.x += star.drift * 0.35;
+        star.y += star.drift;
+        if (star.y > height) {
+          star.y = 0;
+          star.x = Math.random() * width;
+        }
+        if (star.x > width) star.x = 0;
+        star.phase += star.speed;
+      }
+
+      if (time >= nextShootingStar) {
+        shootingStars.push({
+          x: Math.random() * width * 0.8,
+          y: Math.random() * height * 0.45,
+          length: 70 + Math.random() * 100,
+          life: 1,
+          speed: 7 + Math.random() * 5
+        });
+        nextShootingStar = time + 2500 + Math.random() * 4500;
+      }
+
+      shootingStars = shootingStars.filter((star) => star.life > 0);
+      for (const star of shootingStars) {
+        const tailX = star.x - star.length;
+        const tailY = star.y - star.length * 0.45;
+        const trail = context.createLinearGradient(tailX, tailY, star.x, star.y);
+        trail.addColorStop(0, "rgba(180, 205, 255, 0)");
+        trail.addColorStop(1, `rgba(230, 240, 255, ${star.life})`);
+        context.beginPath();
+        context.moveTo(tailX, tailY);
+        context.lineTo(star.x, star.y);
+        context.strokeStyle = trail;
+        context.lineWidth = 1.5;
+        context.stroke();
+        star.x += star.speed;
+        star.y += star.speed * 0.45;
+        star.life -= 0.018;
+      }
+
+      context.shadowBlur = 0;
+      frame = requestAnimationFrame(draw);
+    }
+
+    function stopAnimation() {
+      cancelAnimationFrame(frame);
+    }
+
+    resize();
+    updateNavigationButtons();
+    renderFavorites();
+    document.querySelector(".task-clock").textContent = new Intl.DateTimeFormat("es", {
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(new Date());
+    window.setInterval(() => {
+      document.querySelector(".task-clock").textContent = new Intl.DateTimeFormat("es", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date());
+    }, 30_000);
+    draw();
+
+    window.addEventListener("resize", resize);
+  </script>
+</body>
+</html>
